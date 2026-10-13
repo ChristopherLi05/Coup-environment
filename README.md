@@ -60,6 +60,20 @@ Run all tests with:
 python -m unittest discover -s tests
 ```
 
+## Simulate 2 vs 2 bot matchups
+
+Install the plotting dependency and run all 21 pairings of bot teams for
+10,000 games each:
+
+```bash
+python -m pip install -r requirements.txt
+python simulate.py
+```
+
+Each game seats two copies of each bot with the turn order shuffled. The
+3-by-7 chart shows each team's share of wins and is saved as
+`simulation_2v2_results.png` in the repository root.
+
 ## Create an agent
 
 An agent is a `Player` subclass. Implement `choose_action(game)` to submit one
