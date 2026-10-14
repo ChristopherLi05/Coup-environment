@@ -5,26 +5,33 @@ from agents.duke_fish import DukeFish
 from agents.honest_random import HonestRandom
 from agents.random_agent import RandomAgent
 from agents.passive_agent import PassiveAgent
+from agents.probabilistic_belief_honest_random import ProbabilisticBeliefHonestRandom
+from agents.aggressive_probabilistic_belief import AggressiveProbabilisticBelief
 from src.game import Game
 
 import random
 
 def main():
     playerls = [
-        AlwaysDuke("Always Duke"),
+        # AlwaysDuke("Always Duke"),
         PassiveAgent("Passive Agent"),
-        AggressiveBelief("Aggressive Belief"),
-        BeliefHonestRandom("Belief Honest Random"),
+        # AggressiveBelief("Aggressive Belief"),
+        # AggressiveBelief("Aggressive Belief 2"),
+        # BeliefHonestRandom("Belief Honest Random"),
         DukeFish("Duke Fish"),
         HonestRandom("Honest Random"),
-        RandomAgent("Random Agent"),
+        # RandomAgent("Random Agent"),
+        # ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random"),
+        # ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random 2"),
+        AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
+        # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief 2"),
     ]
 
     winners = {
         player.name: [0, 0] for player in playerls
         }
 
-    games = 100000
+    games = 10000
     for _ in range(games):
         players = random.sample(playerls, 4)
         for i in players:

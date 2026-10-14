@@ -83,6 +83,10 @@ context)` method when that agent is asked to challenge, block, reveal influence,
 or exchange cards. If a responder is a regular `Player`, the game prompts in
 the console instead.
 
+The `ProbabilisticBeliefHonestRandom` and `AggressiveProbabilisticBelief`
+agents use the probabilistic role tracker while remaining independent of the
+deterministic belief agents.
+
 An agent can override `observe(kind, context)` to track public game events. The
 `BeliefHonestRandom` agent uses those events to track role claims, challenge
 contradictions, and clear a player's claim history after a successful exchange.
