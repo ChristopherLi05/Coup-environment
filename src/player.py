@@ -57,6 +57,10 @@ class Player:
         """Receive a public game event; agents may override this to track state."""
         pass
 
+    def on_game_end(self, winner_id: str) -> None:
+        """Receive the winner ID after a game ends."""
+        pass
+
     def reveal_card(self, index: int):
         if index < 0 or index >= len(self.cards):
             raise ValueError("Invalid card index.")

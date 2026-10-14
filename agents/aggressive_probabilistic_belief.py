@@ -23,6 +23,8 @@ class AggressiveProbabilisticBelief(Player):
 		self.rng = random.Random(seed)
 		self.belief_tracker = ProbabilisticBeliefTracker(player_id)
 		self._game: Game | None = None
+		self.challenge_probability = CHALLENGE_ROLE_PROBABILITY
+		self.block_probability = MAX_BLOCK_PROBABILITY
 
 	def observe(self, kind: str, context: dict[str, object]) -> None:
 		self.belief_tracker.observe(kind, context)
@@ -95,7 +97,7 @@ class AggressiveProbabilisticBelief(Player):
 			role = Role(context["role"])
 			return (
 				self.belief_tracker.role_probability(claimant_id, role)
-				<= CHALLENGE_ROLE_PROBABILITY
+				<= self.challenge_probability
 			)
 
 		if kind == "block":
@@ -202,4 +204,4 @@ class AggressiveProbabilisticBelief(Player):
 				- self.belief_tracker.role_probability(target.id, role)
 			)
 		probability_of_block = 1.0 - probability_of_block
-		return probability_of_block <= MAX_BLOCK_PROBABILITY
+		return probability_of_block <= self.block_probability + 1e-12

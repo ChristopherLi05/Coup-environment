@@ -12,6 +12,7 @@ from agents.probabilistic_belief_honest_random import (
 	CHALLENGE_ROLE_PROBABILITY,
 	ProbabilisticBeliefHonestRandom,
 )
+from agents.probabilistic_belief_tweaker import ProbabilisticBeliefTweaker
 from src.cards import Card, Role
 from src.game import Game
 from src.player import Player
@@ -21,6 +22,7 @@ class ProbabilisticBeliefAgentTests(unittest.TestCase):
 	def setUp(self):
 		self.honest_agent = ProbabilisticBeliefHonestRandom("p1", seed=1)
 		self.aggressive_agent = AggressiveProbabilisticBelief("p1", seed=1)
+		self.tweaker = ProbabilisticBeliefTweaker("p3", seed=2)
 		self.opponent = Player("p2", "Opponent")
 		self.game = Game([self.aggressive_agent, self.opponent])
 
@@ -102,6 +104,10 @@ class ProbabilisticBeliefAgentTests(unittest.TestCase):
 			self.aggressive_agent.belief_tracker,
 			"role_probability",
 			return_value=MAX_BLOCK_PROBABILITY,
+		), patch.object(
+			self.aggressive_agent,
+			"block_probability",
+			MAX_BLOCK_PROBABILITY,
 		):
 			self.assertTrue(
 				self.aggressive_agent._cannot_block(
@@ -125,8 +131,9 @@ class ProbabilisticBeliefAgentTests(unittest.TestCase):
 			)
 
 	def test_aggressive_block_estimate_combines_multiple_block_roles(self):
-		with patch(
-			"agents.aggressive_probabilistic_belief.MAX_BLOCK_PROBABILITY",
+		with patch.object(
+			self.aggressive_agent,
+			"block_probability",
 			0.2,
 		), patch.object(
 			self.aggressive_agent.belief_tracker,
@@ -181,6 +188,50 @@ class ProbabilisticBeliefAgentTests(unittest.TestCase):
 			self.aggressive_agent.choose_action(self.game)
 
 		self.assertEqual(perform_action.call_args.args[1], "coup")
+
+	def test_tweaker_starts_with_aggressive_probabilistic_thresholds(self):
+		self.assertEqual(
+			self.tweaker.challenge_probability,
+			CHALLENGE_ROLE_PROBABILITY,
+		)
+		self.assertEqual(
+			self.tweaker.block_probability,
+			MAX_BLOCK_PROBABILITY,
+		)
+
+	def test_tweaker_updates_thresholds_after_one_batch(self):
+		self.tweaker.GAMES_PER_CONFIGURATION = 2
+
+		self.tweaker.on_game_end(self.tweaker.id)
+		self.assertEqual(
+			self.tweaker.challenge_probability,
+			CHALLENGE_ROLE_PROBABILITY,
+		)
+
+		self.tweaker.on_game_end("another-player")
+		self.assertEqual(self.tweaker.games_played, 2)
+		self.assertEqual(self.tweaker.wins, 1)
+		self.assertEqual(self.tweaker.win_rate, 0.5)
+		self.assertNotEqual(
+			(
+				self.tweaker.challenge_probability,
+				self.tweaker.block_probability,
+			),
+			(CHALLENGE_ROLE_PROBABILITY, MAX_BLOCK_PROBABILITY),
+		)
+
+	def test_game_notifies_agents_of_the_winner(self):
+		self.tweaker.GAMES_PER_CONFIGURATION = 1
+		opponent = Player("p2", "Opponent")
+		game = Game([self.tweaker, opponent])
+		self.tweaker.coins = 7
+		opponent.cards[0].revealed = True
+
+		game.perform_action(self.tweaker.id, "coup", target_id=opponent.id)
+
+		self.assertIs(game.winner, self.tweaker)
+		self.assertEqual(self.tweaker.games_played, 1)
+		self.assertEqual(self.tweaker.wins, 1)
 
 
 if __name__ == "__main__":

@@ -87,6 +87,13 @@ The `ProbabilisticBeliefHonestRandom` and `AggressiveProbabilisticBelief`
 agents use the probabilistic role tracker while remaining independent of the
 deterministic belief agents.
 
+`ProbabilisticBeliefTweaker` extends `AggressiveProbabilisticBelief`. It starts
+with the same challenge and block thresholds and then tests nearby threshold
+settings, recording its win rate after each 100 games it plays. It keeps the
+best observed setting and narrows its search step over time. Tuning is in
+memory, so reuse the same agent instance across games for it to learn; results
+are specific to the opponent mix and seating conditions it encounters.
+
 An agent can override `observe(kind, context)` to track public game events. The
 `BeliefHonestRandom` agent uses those events to track role claims, challenge
 contradictions, and clear a player's claim history after a successful exchange.

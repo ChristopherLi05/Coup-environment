@@ -3,6 +3,7 @@ from agents.always_duke import AlwaysDuke
 from agents.belief_honest_random import BeliefHonestRandom
 from agents.duke_fish import DukeFish
 from agents.honest_random import HonestRandom
+from agents.probabilistic_belief_tweaker import ProbabilisticBeliefTweaker
 from agents.random_agent import RandomAgent
 from agents.passive_agent import PassiveAgent
 from agents.probabilistic_belief_honest_random import ProbabilisticBeliefHonestRandom
@@ -23,8 +24,9 @@ def main():
         # RandomAgent("Random Agent"),
         # ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random"),
         # ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random 2"),
-        AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
+        # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
         # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief 2"),
+        ProbabilisticBeliefTweaker("Probabilistic Belief Tweaker"),
     ]
 
     winners = {

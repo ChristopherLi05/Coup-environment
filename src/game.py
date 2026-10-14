@@ -648,6 +648,8 @@ class Game:
         if winner is not None:
             self.current_player = self.players.index(winner)
             self._record_event(f"{winner.name} wins the game.")
+            for player in self.players:
+                player.on_game_end(winner.id)
             return
 
         start = self.current_player
