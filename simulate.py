@@ -2,6 +2,7 @@ from agents.aggressive_belief import AggressiveBelief
 from agents.always_duke import AlwaysDuke
 from agents.belief_honest_random import BeliefHonestRandom
 from agents.duke_fish import DukeFish
+from agents.hibernate import Hibernate
 from agents.honest_random import HonestRandom
 from agents.probabilistic_belief_tweaker import ProbabilisticBeliefTweaker
 from agents.random_agent import RandomAgent
@@ -14,19 +15,20 @@ import random
 
 def main():
     playerls = [
-        # AlwaysDuke("Always Duke"),
+        AlwaysDuke("Always Duke"),
         PassiveAgent("Passive Agent"),
-        # AggressiveBelief("Aggressive Belief"),
+        AggressiveBelief("Aggressive Belief"),
         # AggressiveBelief("Aggressive Belief 2"),
-        # BeliefHonestRandom("Belief Honest Random"),
+        BeliefHonestRandom("Belief Honest Random"),
         DukeFish("Duke Fish"),
         HonestRandom("Honest Random"),
-        # RandomAgent("Random Agent"),
-        # ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random"),
+        RandomAgent("Random Agent"),
+        ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random"),
         # ProbabilisticBeliefHonestRandom("Probabilistic Belief Honest Random 2"),
-        # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
+        AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
         # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief 2"),
         ProbabilisticBeliefTweaker("Probabilistic Belief Tweaker"),
+        Hibernate("Hibernate"),
     ]
 
     winners = {

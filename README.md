@@ -87,6 +87,10 @@ The `ProbabilisticBeliefHonestRandom` and `AggressiveProbabilisticBelief`
 agents use the probabilistic role tracker while remaining independent of the
 deterministic belief agents.
 
+`Hibernate` uses the deterministic belief tracker while fishing for a Duke
+with exchanges. After acquiring one, it takes Income until the endgame, when
+four or fewer influences remain; then it plays as `AggressiveBelief`.
+
 `ProbabilisticBeliefTweaker` extends `AggressiveProbabilisticBelief`. It starts
 with the same challenge and block thresholds and then tests nearby threshold
 settings, recording its win rate after each 100 games it plays. It keeps the
