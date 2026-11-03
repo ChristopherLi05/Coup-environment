@@ -41,6 +41,26 @@ The action or block then proceeds.
 - Coins are treated as unlimited; there is no finite Treasury.
 - Eliminated players' coins are not tracked in a Treasury.
 
+## Play in the browser
+
+The React app in [`app/`](app/README.md) lets one human play Coup against 1–5
+agents discovered from `agents/`. The local Python API reuses `src.Game` and the
+agent implementations directly; new agents appear in the setup list when the
+API is restarted.
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+In a second terminal, start the Python API:
+
+```bash
+cd app
+npm run dev:api
+```
+
 ## Run a game
 
 From the repository root:
