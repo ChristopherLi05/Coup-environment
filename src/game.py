@@ -238,8 +238,14 @@ class Game:
             if self._check_challenge(actor, Role.AMBASSADOR, decision_provider):
                 self._record_event("The Exchange claim is disproven; no cards are exchanged.")
             else:
-                self._exchange(actor, decision_provider)
-                self._notify_observers("exchange", {"player_id": actor.id})
+                returned_roles = self._exchange(actor, decision_provider)
+                for observer in self.players:
+                    context: dict[str, object] = {"player_id": actor.id}
+                    if observer.id == actor.id:
+                        context["returned_roles"] = [
+                            role.value for role in returned_roles
+                        ]
+                    observer.observe("exchange", context)
                 self._record_event(f"{actor.name} exchanges cards with the Court.")
         elif action == "steal":
             if self._check_challenge(actor, Role.CAPTAIN, decision_provider):
@@ -495,7 +501,7 @@ class Game:
         self,
         player: Player,
         decision_provider: DecisionProvider | None,
-    ):
+    ) -> list[Role]:
         if len(self.deck) < 2:
             raise ValueError("Not enough cards in the Court to exchange.")
 
@@ -533,10 +539,12 @@ class Game:
 
         kept_indices = set(choices)
         player.cards = revealed_cards + [cards[index] for index in choices]
-        self.deck.extend(
+        returned_cards = [
             card for index, card in enumerate(cards) if index not in kept_indices
-        )
+        ]
+        self.deck.extend(returned_cards)
         random.shuffle(self.deck)
+        return [card.role for card in returned_cards]
 
     def _record_event(self, message: str):
         self.log.append(message)

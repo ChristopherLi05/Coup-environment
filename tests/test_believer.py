@@ -131,6 +131,91 @@ class BelieverTests(unittest.TestCase):
 			self.agent.belief_tracker.beliefs["p2"], [Role.DUKE]
 		)
 
+	def test_own_exchange_adds_returned_cards_to_deck_beliefs(self):
+		self.agent.belief_tracker.deck_beliefs = [Role.CONTESSA]
+
+		self.agent.observe(
+			"exchange",
+			{
+				"player_id": self.agent.id,
+				"returned_roles": [Role.DUKE.value, Role.CAPTAIN.value],
+			},
+		)
+
+		self.assertEqual(
+			self.agent.belief_tracker.deck_beliefs,
+			[Role.CONTESSA, Role.DUKE, Role.CAPTAIN],
+		)
+
+	def test_other_players_exchange_clears_deck_beliefs(self):
+		self.agent.belief_tracker.deck_beliefs = [Role.DUKE, Role.CAPTAIN]
+
+		self.agent.observe("exchange", {"player_id": "p2"})
+
+		self.assertEqual(self.agent.belief_tracker.deck_beliefs, [])
+
+	def test_proven_claim_replaces_deck_beliefs_with_returned_card(self):
+		self.agent.belief_tracker.deck_beliefs = [Role.CAPTAIN, Role.CONTESSA]
+
+		self.agent.observe(
+			"claim",
+			{
+				"claimant_id": "p2",
+				"role": Role.DUKE.value,
+				"proven": True,
+			},
+		)
+
+		self.assertEqual(self.agent.belief_tracker.deck_beliefs, [Role.DUKE])
+
+	def test_deck_beliefs_count_toward_known_role_copies(self):
+		self.agent.belief_tracker.sync_own_cards([Role.DUKE, Role.ASSASSIN])
+		self.agent.belief_tracker.deck_beliefs = [Role.DUKE]
+		self.agent.belief_tracker.add_belief("p2", Role.DUKE)
+
+		self.assertTrue(self.agent.belief_tracker.contradicts("p3", Role.DUKE))
+
+	def test_exchange_reports_returned_roles_only_to_exchanger(self):
+		class ExchangeObserver(Player):
+			def __init__(self):
+				super().__init__("p2", "Observer")
+				self.exchange_context = None
+
+			def observe(self, kind, context):
+				if kind == "exchange":
+					self.exchange_context = context
+
+		observer = ExchangeObserver()
+		game = Game([self.agent, observer])
+		self.agent.cards = [Card(Role.AMBASSADOR), Card(Role.CAPTAIN)]
+		self.agent.belief_tracker.sync_own_cards(
+			[card.role for card in self.agent.cards]
+		)
+		returned_roles = []
+
+		def decide(kind, context):
+			if kind == "challenge":
+				return False
+			if kind == "exchange":
+				kept_indices = [0, 1]
+				returned_roles.extend(
+					Role(card["role"])
+					for card in context["cards"]
+					if card["index"] not in kept_indices
+				)
+				return kept_indices
+			raise AssertionError(f"Unexpected decision: {kind}")
+
+		with patch("random.shuffle"):
+			game.perform_action(
+				self.agent.id, "exchange", decision_provider=decide
+			)
+
+		self.assertEqual(self.agent.belief_tracker.deck_beliefs, returned_roles)
+		self.assertEqual(
+			observer.exchange_context, {"player_id": self.agent.id}
+		)
+
 	def test_reveal_keeps_known_card_and_removes_newest_unrevealed_belief(self):
 		for role in (Role.DUKE, Role.CAPTAIN):
 			self.agent.observe(
