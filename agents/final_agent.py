@@ -98,7 +98,11 @@ class FinalAgent(Player):
 				self.id, "coup", target_id=self.rng.choice(top_coin_opponents).id
 			)
 
-        
+		if any(
+			card.role == Role.DUKE and not card.revealed for card in self.cards
+		):
+			return game.perform_action(self.id, "tax")
+
 		revealed_dukes = sum(
 			card.role == Role.DUKE and card.revealed
 			for player in game.players
@@ -106,7 +110,7 @@ class FinalAgent(Player):
 		)
 		if revealed_dukes >= 3:
 			return game.perform_action(self.id, "foreign_aid")
-		       
+
 		if not self._has_acquired_duke and self._turns_exchange <= 2:
 			return game.perform_action(self.id, "exchange")
 		if self.coins != 5:

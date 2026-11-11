@@ -10,6 +10,7 @@ from agents.random_agent import RandomAgent
 from agents.passive_agent import PassiveAgent
 from agents.probabilistic_belief_honest_random import ProbabilisticBeliefHonestRandom
 from agents.aggressive_probabilistic_belief import AggressiveProbabilisticBelief
+from agents.probabilistic_belief_duke_fish import ProbabilsticBeliefDukeFish
 from src.game import Game
 
 import random
@@ -33,7 +34,7 @@ def _play_game(game: Game) -> bool:
     return False
 
 
-def main():
+def main(games: int = 10000):
     final_agent = FinalAgent("Final Agent")
     playerls = [
         AlwaysDuke("Always Duke"),
@@ -49,6 +50,7 @@ def main():
         AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
         # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief 2"),
         ProbabilisticBeliefTweaker("Probabilistic Belief Tweaker"),
+        ProbabilsticBeliefDukeFish("Probabilistic Belief Duke Fish"),
         # Hibernate("Hibernate"),
         final_agent,
     ]
@@ -60,7 +62,6 @@ def main():
     draws = 0
     tweaker_endgame_count = 0
 
-    games = 10000
     for _ in range(games):
         players = random.sample(playerls, 4)
         for i in players:

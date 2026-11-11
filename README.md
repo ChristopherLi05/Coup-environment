@@ -80,14 +80,24 @@ Run all tests with:
 python -m unittest discover -s tests
 ```
 
+## Run the mixed-agent tournament
+
+Run 10,000 four-player games with four randomly selected agents from the
+`simulate.py` roster. The summary reports each agent's win rate; the roster
+includes `StrategicAgent`.
+
+```bash
+python simulate.py
+```
+
 ## Simulate 2 vs 2 bot matchups
 
-Install the plotting dependency and run all 21 pairings of bot teams for
-10,000 games each:
+Install the plotting dependency and run all 21 pairings of bot teams for 1,000
+games each:
 
 ```bash
 python -m pip install -r requirements.txt
-python simulate.py
+python simulate2v2.py
 ```
 
 Each game seats two copies of each bot with the turn order shuffled. The
