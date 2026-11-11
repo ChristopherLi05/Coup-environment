@@ -80,19 +80,60 @@ Run all tests with:
 python -m unittest discover -s tests
 ```
 
+## Run the mixed-agent tournament
+
+Run 10,000 four-player games with four randomly selected agents from the
+`simulate.py` roster. The summary reports each agent's win rate; the roster
+includes `StrategicAgent`.
+
+```bash
+python simulate.py
+```
+
 ## Simulate 2 vs 2 bot matchups
 
-Install the plotting dependency and run all 21 pairings of bot teams for
-10,000 games each:
+Install the plotting dependency and run all 21 pairings of bot teams for 1,000
+games each:
 
 ```bash
 python -m pip install -r requirements.txt
-python simulate.py
+python simulate2v2.py
 ```
 
 Each game seats two copies of each bot with the turn order shuffled. The
 3-by-7 chart shows each team's share of wins and is saved as
 `simulation_2v2_results.png` in the repository root.
+
+## Run a tournament
+
+The tournament package reuses the existing Coup engine. Each round reshuffles
+the agents into groups of four; every group plays 1,000 games with a newly
+shuffled turn order in each game. A game still running after 100 turns is a
+draw. Group wins award 4, 3, 2, and 1 points by rank, with tied agents sharing
+the points for their highest shared rank. The default tournament has 100
+rounds. The final leaderboard orders agents by points, then total wins.
+
+If the leading agents are still tied, they play 1,000 2v2 games per
+head-to-head matchup, using two copies of each agent. When more than two agents
+are tied, all tied agents play a round-robin series; another series is played
+if the playoff wins are still tied.
+
+Run a tournament with every playable agent in `agents/`:
+
+```bash
+python run_tournament.py
+```
+
+The default run uses 100 rounds and 1,000 games per group. With 14 agents, the
+two byes per round rotate among agents with the fewest previous byes. To run a
+shorter test, adjust the settings and optionally provide a reproducible seed:
+
+```bash
+python run_tournament.py --rounds 3 --games-per-group 10 --seed 42
+```
+
+The options `--rounds`, `--games-per-group`, `--max-turns`, and `--seed` are
+available. A bye gives no points that round.
 
 ## Create an agent
 

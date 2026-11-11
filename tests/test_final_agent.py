@@ -58,7 +58,7 @@ class FinalAgentTests(unittest.TestCase):
 		with patch.object(self.game, "perform_action", return_value={}) as perform:
 			self.agent.choose_action(self.game)
 
-		self.assertEqual(perform.call_args.args[1], "income")
+		self.assertEqual(perform.call_args.args[1], "tax")
 
 	def test_takes_income_at_five_coins_when_opponents_have_at_most_three(self):
 		self.agent.coins = 5

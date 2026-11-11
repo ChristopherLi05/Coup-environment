@@ -10,6 +10,7 @@ from agents.random_agent import RandomAgent
 from agents.passive_agent import PassiveAgent
 from agents.probabilistic_belief_honest_random import ProbabilisticBeliefHonestRandom
 from agents.aggressive_probabilistic_belief import AggressiveProbabilisticBelief
+from agents.probabilistic_belief_duke_fish import ProbabilsticBeliefDukeFish
 from src.game import Game
 
 import random
@@ -66,6 +67,7 @@ def main(argv=None):
         AggressiveProbabilisticBelief("Aggressive Probabilistic Belief"),
         # AggressiveProbabilisticBelief("Aggressive Probabilistic Belief 2"),
         ProbabilisticBeliefTweaker("Probabilistic Belief Tweaker"),
+        ProbabilsticBeliefDukeFish("Probabilistic Belief Duke Fish"),
         # Hibernate("Hibernate"),
         final_agent,
     ]
