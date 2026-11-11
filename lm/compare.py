@@ -265,6 +265,7 @@ def build_contenders(args, parser) -> list[tuple[str, callable]]:
 			return LLMAgent(
 				CONTENDER_ID, name=CONTENDER_ID, seed=0, model_path=path,
 				temperature=args.temperature, greedy=args.greedy,
+				history_max_lines=getattr(args, "history_max_lines", 600),
 			)
 		out.append((name, factory))
 	if args.bots:
@@ -321,6 +322,8 @@ def main(argv=None):
 	p.add_argument("--seed", type=int, default=0)
 	p.add_argument("--greedy", action="store_true")
 	p.add_argument("--temperature", type=float, default=1.0)
+	p.add_argument("--history-max-lines", type=int, default=600,
+		help="LM contenders' past-game history budget (lm.rl trains with 200)")
 	p.add_argument("--reference", default=None, help="default: first contender")
 	p.add_argument("--out", default="data/compare.json")
 	p.add_argument("--plot", default=None, help="optional PNG path")
