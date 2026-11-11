@@ -36,7 +36,7 @@ The repository includes a GitHub Actions workflow that builds `app/` and
 deploys it to GitHub Pages when changes are pushed to `main`. In the repository
 settings, set **Pages → Build and deployment → Source** to **GitHub Actions**.
 After the workflow completes, the site is available at
-https://punnpunnpunn.github.io/Coup-environment/.
+https://punnpunnpunn.github.io/Coup/.
 
 GitHub Pages only hosts the static React app; it does not run the Python API.
 The game interface needs the API endpoints served by `server.py`, so gameplay

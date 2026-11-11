@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_PAGES === 'true' ? '/Coup-environment/' : '/',
+  base: process.env.GITHUB_PAGES === 'true' ? '/Coup/' : '/',
   plugins: [react()],
   server: {
     proxy: {
